@@ -2,6 +2,7 @@
 
 import 'package:firbasechat/Screens/chatpage.dart';
 import 'package:firbasechat/Screens/register.dart';
+import 'package:firbasechat/cubit/Chat_cubit/chat_cubit.dart';
 import 'package:firbasechat/cubit/login_cubit/login_cubit.dart';
 import 'package:firbasechat/widgets/constes.dart';
 import 'package:firbasechat/widgets/customButton.dart';
@@ -29,6 +30,7 @@ class LoginPage extends StatelessWidget {
         if (state is LoginLoading) {
           isloading = true;
         } else if (state is LoginSuccess) {
+          BlocProvider.of<ChatCubit>(context).getMessage();
           Navigator.pushNamed(context, ChatPage.id);
           isloading = false;
         } else if (state is LoginFailure) {
@@ -36,7 +38,7 @@ class LoginPage extends StatelessWidget {
           isloading = false;
         }
       },
-      child:  ModalProgressHUD(
+      child: ModalProgressHUD(
         inAsyncCall: isloading,
         child: Scaffold(
           backgroundColor: kPrimaryColor,

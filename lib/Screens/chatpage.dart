@@ -21,7 +21,7 @@ class ChatPage extends StatelessWidget {
   List<Messages> listMessage = [];
   @override
   Widget build(BuildContext context) {
-    var email = ModalRoute.of(context)!.settings.arguments;
+    var email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -41,13 +41,10 @@ class ChatPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: BlocConsumer<ChatCubit, ChatState>(
-              listener: (context, state) {
-                if (state is ChatSucess) {
-                  listMessage = state.listMessag;
-                }
-              },
+            child: BlocBuilder<ChatCubit, ChatState>(
               builder: (context, state) {
+                var listMessage =
+                    BlocProvider.of<ChatCubit>(context).listMessage;
                 return ListView.builder(
                     reverse: true,
                     controller: _controller,
@@ -67,6 +64,8 @@ class ChatPage extends StatelessWidget {
             child: TextField(
               controller: controller,
               onSubmitted: (data) {
+                BlocProvider.of<ChatCubit>(context)
+                    .sendMessage(message: data, email: email);
                 controller.clear();
                 _controller.animateTo(0,
                     duration: Duration(milliseconds: 500),
